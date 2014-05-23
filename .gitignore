@@ -1,4 +1,2 @@
-myblog_site.pp
 .vagrant
-*.zip
-*.tgz
+PuppetFiles/
