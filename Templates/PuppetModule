@@ -1,0 +1,24 @@
+my_module — This outermost directory’s name matches the name of the module.
+
+	manifests/ — Contains all of the manifests in the module.
+		init.pp — Contains a class definition or can be empty. This class’s name must match the module’s name.
+		other_class.pp — Contains a class named my_module::other_class.
+		my_defined_type.pp — Contains a defined type named my_module::my_defined_type.
+		implementation/ — This directory’s name affects the class names beneath it.
+			foo.pp — Contains a class named my_module::implementation::foo.
+			bar.pp — Contains a class named my_module::implementation::bar.
+
+	files/ — Contains static files, which managed nodes can download.
+		service.conf — This file’s URL would be puppet:///modules/my_module/service.conf.
+
+	lib/ — Contains plugins, like custom facts and custom resource types. See “Using Plugins” for more details.
+
+	templates/ — Contains templates, which the module’s manifests can use. See “Templates” for more details.
+		component.erb — A manifest can render this template with template('my_module/component.erb').
+		So template('my_module/component.erb') would render the template my_module/templates/component.erb.
+
+	tests/ — Contains examples showing how to declare the module’s classes and defined types.
+		init.pp
+		other_class.pp — Each class or type should have an example in the tests directory.
+
+	spec/ — Contains spec tests for any plugins in the lib directory.

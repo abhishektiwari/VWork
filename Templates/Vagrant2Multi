@@ -1,0 +1,60 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+ 
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+ 
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # All Vagrant configuration is done here. The most common configuration
+  # options are documented and commented below. For a complete reference,
+  # please see the online documentation at vagrantup.com.
+ 
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  config.vm.synced_folder ".", "/vagrant", nfs: true
+  
+  # Defining Multiple VMs
+  # VM1
+  config.vm.define "web_config" do |web_config|
+    # Every Vagrant virtual environment requires a box to build off of.
+    # We have already installed base box precise64 by running following
+    # vagrant box add precise64 http://files.vagrantup.com/precise64.box
+    web_config.vm.box = "precise64"
+    web_config.vm.network :forwarded_port, guest: 8080, host: 8080
+    web_config.vm.network :forwarded_port, guest: 9090, host: 9090
+    web_config.vm.network :private_network, ip: "33.33.33.10"
+    # Enable provisioning with Puppet stand alone.  Puppet manifests
+    # are contained in a directory path relative to this Vagrantfile.
+    # You will need to create the manifests directory and a manifest in
+    # the file precise64.pp in the manifests_path directory.
+    web_config.vm.provision "puppet" do |webpuppet|
+        webpuppet.options        = "--verbose --debug"
+        webpuppet.manifests_path = "../../Manifests"
+        webpuppet.module_path    = "../../Modules"
+        webpuppet.manifest_file  = "web_site.pp"
+    end 
+  end
+ 
+  # VM2
+  config.vm.define "db_config" do |db_config|
+    # Every Vagrant virtual environment requires a box to build off of.
+    # We have already installed base box precise64 by running following
+    # vagrant box add precise64 http://files.vagrantup.com/precise64.box
+    db_config.vm.box = "precise64"
+    db_config.vm.network :forwarded_port, guest: 8080, host: 8080
+    db_config.vm.network :forwarded_port, guest: 9090, host: 9090
+    db_config.vm.network :private_network, ip: "33.33.33.11"
+    # Enable provisioning with Puppet stand alone.  Puppet manifests
+    # are contained in a directory path relative to this Vagrantfile.
+    # You will need to create the manifests directory and a manifest in
+    # the file precise64.pp in the manifests_path directory.
+    db_config.vm.provision "puppet" do |dbpuppet|
+        dbpuppet.options        = "--verbose --debug"
+        dbpuppet.manifests_path = "../../PuppetManifests"
+        dbpuppet.module_path    = "../../PuppetModules"
+        dbpuppet.manifest_file  = "db_site.pp"
+    end 
+  end
+end
